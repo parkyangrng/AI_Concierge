@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Life Unlimited — Support Hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    /* ---- Spectrum-inspired token system ---- */
+    --spectrum-navy: #0B1D3A;      /* deep backplate blue */
+    --spectrum-navy-2: #102A54;    /* slightly lighter panel */
+    --spectrum-blue: #0057B8;      /* core brand blue */
+    --current-cyan: #00AEEF;       /* connectivity current, cool stop */
+    --current-green: #00E28A;      /* connectivity current, vivid green stop */
+    --neutral-100: #F4F7FB;
+    --neutral-300: #C9D4E3;
+    --neutral-700: #8FA0BB;
+    --white: #FFFFFF;
+
+    --font-display: 'Space Grotesk', 'Helvetica Neue', Arial, sans-serif;
+    --font-body: 'Inter', 'Helvetica Neue', Arial, sans-serif;
+
+    --radius-lg: 28px;
+    --radius-sm: 14px;
+  }
+
+  *{ box-sizing: border-box; }
+
+  html, body{
+    margin:0; padding:0;
+    background: var(--spectrum-navy);
+    color: var(--white);
+    font-family: var(--font-body);
+    min-height:100vh;
+  }
+
+  body{
+    background:
+      radial-gradient(120% 90% at 15% -10%, rgba(0,174,239,0.16), transparent 55%),
+      radial-gradient(120% 90% at 90% 110%, rgba(0,226,138,0.12), transparent 55%),
+      var(--spectrum-navy);
+  }
+
+  /* ---------- Signature: the "connectivity current" flowing rule ---------- */
+  .current-rule{
+    height: 3px;
+    width: 100%;
+    background: linear-gradient(90deg,
+      var(--spectrum-blue) 0%,
+      var(--current-cyan) 35%,
+      var(--current-green) 65%,
+      var(--spectrum-blue) 100%);
+    background-size: 200% 100%;
+    animation: flow 6s linear infinite;
+  }
+  @keyframes flow{
+    0%{ background-position: 0% 0; }
+    100%{ background-position: 200% 0; }
+  }
+
+  header{
+    padding: 56px 24px 40px;
+    text-align: center;
+    max-width: 780px;
+    margin: 0 auto;
+  }
+
+  .eyebrow{
+    font-family: var(--font-body);
+    font-size: 20px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--current-cyan);
+    margin: 0 0 14px;
+  }
+
+  /* ---------- Spectrum logo, fixed top-right corner ---------- */
+  .brand-logo{
+    position: fixed;
+    top: 20px;
+    right: 24px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    z-index: 500;
+  }
+  .brand-logo img{
+    height: 102px;
+    width: auto;
+    display: block;
+    filter: brightness(0) invert(1);
+  }
+
+  @media (max-width: 560px){
+    .brand-logo{ top: 14px; right: 16px; }
+    .brand-logo img{ height: 78px; }
+  }
+
+  h1{
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(32px, 5vw, 48px);
+    line-height: 1.08;
+    margin: 0 0 16px;
+    letter-spacing: -0.01em;
+  }
+
+  h1 span{
+    background: linear-gradient(90deg, var(--current-cyan), var(--current-green));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  header p{
+    font-size: 16px;
+    line-height: 1.6;
+    color: var(--neutral-300);
+    margin: 0 auto;
+    max-width: 520px;
+  }
+
+  main{
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 8px 24px 96px;
+  }
+
+  .grid{
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 22px;
+  }
+
+  /* ---------- Featured video row (above the flip cards) ---------- */
+  .featured-row{
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 22px;
+    margin-bottom: 26px;
+  }
+
+  .featured-video{
+    grid-column: 2 / span 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+  }
+
+  .featured-video .video-frame-wrap{
+    width: 100%;
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    border: 1px solid rgba(0,174,239,0.35);
+    box-shadow: 0 14px 34px rgba(0,10,30,0.45), 0 0 0 1px rgba(0,226,138,0.14);
+  }
+
+  .featured-caption{
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 17px;
+    color: var(--white);
+    margin: 0;
+  }
+
+  @media (max-width: 980px){
+    .grid{ grid-template-columns: repeat(2, 1fr); }
+    .featured-row{ grid-template-columns: repeat(2, 1fr); }
+    .featured-video{ grid-column: 1 / -1; }
+  }
+  @media (max-width: 560px){
+    .grid{ grid-template-columns: 1fr; }
+    .featured-row{ grid-template-columns: 1fr; }
+    .featured-video{ grid-column: 1 / -1; }
+  }
+
+  /* ---------- Flip card ---------- */
+  .card-scene{
+    perspective: 1600px;
+    aspect-ratio: 1 / 0.85;
+    min-height: 179px;
+  }
+
+  .card{
+    position: relative;
+    width: 100%;
+    height: 100%;
+    transform-style: preserve-3d;
+    transition: transform 0.65s cubic-bezier(.4,.2,.2,1);
+    cursor: pointer;
+  }
+
+  .card-scene.is-flipped .card{
+    transform: rotateY(180deg);
+  }
+
+  .card-face{
+    position: absolute;
+    inset: 0;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    border-radius: var(--radius-lg);
+    padding: 22px;
+    display: flex;
+    flex-direction: column;
+    background:
+      linear-gradient(160deg, rgba(255,255,255,0.05), rgba(255,255,255,0) 40%),
+      var(--spectrum-navy-2);
+    border: 1px solid rgba(143,160,187,0.22);
+    box-shadow: 0 10px 30px rgba(0,10,30,0.35);
+    transition: border-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
+  }
+
+  .card-scene:hover .card-face{
+    border-color: rgba(0,174,239,0.55);
+    box-shadow: 0 14px 34px rgba(0,10,30,0.45), 0 0 0 1px rgba(0,226,138,0.18);
+  }
+
+  .card-scene:hover .card:not([style]){
+    transform: translateY(-4px);
+  }
+  .card-scene:not(.is-flipped):hover .card{
+    transform: translateY(-4px);
+  }
+  .card-scene.is-flipped:hover .card{
+    transform: rotateY(180deg) translateY(-4px);
+  }
+
+  .card-face--back{
+    transform: rotateY(180deg);
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    gap: 14px;
+  }
+
+  .icon-badge{
+    width: 46px;
+    height: 46px;
+    border-radius: 13px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, rgba(0,174,239,0.22), rgba(0,226,138,0.18));
+    color: var(--current-cyan);
+    margin-bottom: 18px;
+  }
+  .icon-badge svg{ width: 24px; height: 24px; }
+
+  .card-title{
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 17px;
+    line-height: 1.3;
+    margin: 0 0 8px;
+    color: var(--white);
+  }
+
+  .card-sub{
+    font-size: 13px;
+    line-height: 1.5;
+    color: var(--neutral-700);
+    margin: 0;
+  }
+
+  .card-face--front{
+    justify-content: flex-end;
+  }
+
+  .flip-hint{
+    align-self: flex-start;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--neutral-700);
+    margin-top: auto;
+    padding-top: 12px;
+    opacity: 0.75;
+  }
+
+  /* Play button on back face */
+  .play-button{
+    width: 62px;
+    height: 62px;
+    border-radius: 50%;
+    border: none;
+    cursor: pointer;
+    background: linear-gradient(135deg, var(--current-cyan), var(--current-green));
+    color: var(--spectrum-navy);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 8px 20px rgba(0,174,239,0.35);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  .play-button:hover{
+    transform: scale(1.06);
+    box-shadow: 0 10px 26px rgba(0,226,138,0.45);
+  }
+  .play-button svg{ width: 22px; height: 22px; margin-left: 3px; }
+
+  .card-scene.no-video .play-button{
+    background: rgba(143,160,187,0.25);
+    color: rgba(255,255,255,0.5);
+    cursor: default;
+    pointer-events: none;
+    box-shadow: none;
+  }
+
+  .watch-label{
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--neutral-300);
+  }
+
+  .back-title{
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 15px;
+    color: var(--white);
+    margin: 0;
+  }
+
+  /* ---------- Video modal ---------- */
+  .video-overlay{
+    position: fixed;
+    inset: 0;
+    background: rgba(6,15,32,0.92);
+    backdrop-filter: blur(4px);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    padding: 24px;
+  }
+  .video-overlay.is-open{ display: flex; }
+
+  .video-panel{
+    width: 100%;
+    max-width: 920px;
+    background: var(--spectrum-navy-2);
+    border-radius: var(--radius-sm);
+    border: 1px solid rgba(0,174,239,0.35);
+    overflow: hidden;
+    box-shadow: 0 30px 80px rgba(0,0,0,0.5);
+  }
+
+  .video-panel-header{
+    display:flex;
+    align-items:center;
+    justify-content: space-between;
+    padding: 14px 18px;
+    border-bottom: 1px solid rgba(143,160,187,0.18);
+  }
+
+  .video-panel-header span{
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 14px;
+    letter-spacing: 0.02em;
+  }
+
+  .close-button{
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    border: 1px solid rgba(143,160,187,0.35);
+    background: transparent;
+    color: var(--neutral-300);
+    cursor: pointer;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+  }
+  .close-button:hover{
+    background: rgba(255,80,80,0.14);
+    border-color: rgba(255,80,80,0.4);
+    color: #FF7A7A;
+  }
+  .close-button svg{ width: 16px; height: 16px; }
+
+  .video-frame-wrap{
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    background: #000;
+  }
+  .video-frame-wrap iframe{
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    border: 0;
+  }
+
+  footer{
+    text-align:center;
+    padding: 0 24px 48px;
+    color: var(--neutral-700);
+    font-size: 13px;
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    .current-rule{ animation: none; }
+    .card{ transition: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="current-rule"></div>
+
+<div class="brand-logo" aria-label="Spectrum">
+  <img src="https://logos-world.net/wp-content/uploads/2021/02/Spectrum-Emblem.png" alt="Spectrum">
+</div>
+
+<header>
+  <h6 class="eyebrow"> <strong>Spectrum AI Concierge</strong> </h6>
+<h1>Everything you need, <span>on your terms</span>.</h1>
+  <h2><strong>Meet your AI Concierge</strong></h2>
+</header>
+
+<main>
+  <div class="featured-row">
+    <div class="featured-video">
+      <div class="video-frame-wrap">
+        <iframe src="https://www.youtube-nocookie.com/embed/dxFXDk2oZxg" title="Meet your AI Concierge" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+      </div>
+      <p class="featured-caption" style="text-align: center;">Pick a topic below and flip the card for a short walkthrough video &nbsp;</p>
+      <p class="featured-caption" style="text-align: center; font-size: 8px; font-weight: normal;">*Ai Generated Video*&nbsp;</p>
+    </div>
+  </div>
+
+  <div class="grid" id="card-grid">
+
+  <!-- 8. Customer Service (Video Added) -->
+    <div class="card-scene" data-video-id="-mqj4PKYJo8">
+      <div class="card">
+        <div class="card-face card-face--front">
+          <div class="icon-badge">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M4 13a8 8 0 0 1 16 0"/>
+              <path d="M4 13v4a2 2 0 0 0 2 2h1v-6H5a1 1 0 0 0-1 1z"/>
+              <path d="M20 13v4a2 2 0 0 1-2 2h-1v-6h1a1 1 0 0 1 1 1z"/>
+              <path d="M9 19a3 3 0 0 0 3 2"/>
+            </svg>
+          </div>
+          <h3 class="card-title">Customer Service</h3>
+          <p class="card-sub">Support and questions</p>
+          <span class="flip-hint">Click to See Video →</span>
+        </div>
+        <div class="card-face card-face--back">
+          <button class="play-button" aria-label="Play video for Customer Service">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+          </button>
+          <p class="back-title">Customer Service</p>
+          <span class="watch-label">Watch how it works</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 1. Personal Healthcare -->
+    <div class="card-scene" data-video-id="WTDezouFwoI">
+      <div class="card">
+        <div class="card-face card-face--front">
+          <div class="icon-badge">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M4 12h3l1.5-4 3 8 1.5-4H20"/>
+              <path d="M8.5 6.2C7.6 5 5.6 5 4.8 6.6c-.8 1.6.1 3 1.6 4.4L12 16l5.6-5c1.5-1.4 2.4-2.8 1.6-4.4-.8-1.6-2.8-1.6-3.7-.4"/>
+            </svg>
+          </div>
+          <h3 class="card-title">Personal Healthcare</h3>
+          <p class="card-sub">Book appointments or refill a prescription</p>
+          <span class="flip-hint">Click to See Video →</span>
+        </div>
+        <div class="card-face card-face--back">
+          <button class="play-button" aria-label="Play video for Personal Healthcare">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+          </button>
+          <p class="back-title">Personal Healthcare</p>
+          <span class="watch-label">Watch how it works</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 5. Home Services -->
+    <div class="card-scene" data-video-id="ayM1ihCiXR8">
+      <div class="card">
+        <div class="card-face card-face--front">
+          <div class="icon-badge">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M14.7 6.3a4 4 0 0 0-5.4 5.4L3 18v3h3l6.3-6.3a4 4 0 0 0 5.4-5.4l-2.5 2.5-2-2z"/>
+            </svg>
+          </div>
+          <h3 class="card-title">Home Services</h3>
+          <p class="card-sub">Plumber, pest control, electrician</p>
+          <span class="flip-hint">Click to See Video →</span>
+        </div>
+        <div class="card-face card-face--back">
+          <button class="play-button" aria-label="Play video for Home Services">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+          </button>
+          <p class="back-title">Home Services</p>
+          <span class="watch-label">Watch how it works</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 6. Travel & Dining -->
+    <div class="card-scene" data-video-id="CXtupoB-kNg">
+      <div class="card">
+        <div class="card-face card-face--front">
+          <div class="icon-badge">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M3.5 16.5L10 14l4.5-8.4c.4-.7 1.4-.7 1.8 0 .3.6.1 1.3-.4 1.7L11.8 11 20 12.3c.9.1 1 1.4.1 1.6l-9 2.3-2.3 4-1.7-.4.7-3.3z"/>
+            </svg>
+          </div>
+          <h3 class="card-title">Travel &amp; Dining</h3>
+          <p class="card-sub">Manage flights, hotels and reservations</p>
+          <span class="flip-hint">Click to See Video →</span>
+        </div>
+        <div class="card-face card-face--back">
+          <button class="play-button" aria-label="Play video for Travel and Dining">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+          </button>
+          <p class="back-title">Travel &amp; Dining</p>
+          <span class="watch-label">Watch how it works</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 7. Subscriptions -->
+    <div class="card-scene" data-video-id="UxIkAInIV4o">
+      <div class="card">
+        <div class="card-face card-face--front">
+          <div class="icon-badge">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M20 11a8 8 0 1 0-2.3 6.4"/>
+              <path d="M20 6v5h-5"/>
+            </svg>
+          </div>
+          <h3 class="card-title">Subscriptions</h3>
+          <p class="card-sub">Cancellations, downgrades and renewals</p>
+          <span class="flip-hint">Click to See Video →</span>
+        </div>
+        <div class="card-face card-face--back">
+          <button class="play-button" aria-label="Play video for Subscriptions">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+          </button>
+          <p class="back-title">Subscriptions</p>
+          <span class="watch-label">Watch how it works</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2. Bills & Payments -->
+    <div class="card-scene no-video">
+      <div class="card">
+        <div class="card-face card-face--front">
+          <div class="icon-badge">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M6 3h12v18l-2.5-1.5L13 21l-2.5-1.5L8 21l-2-1.5V3z"/>
+              <path d="M9 8h6M9 12h6M9 16h3"/>
+            </svg>
+          </div>
+          <h3 class="card-title">Bills &amp; Payments</h3>
+          <p class="card-sub">Pay bills, dispute a charge</p>
+          <span class="flip-hint">Click to See Video →</span>
+        </div>
+        <div class="card-face card-face--back">
+          <p class="back-title">Bills &amp; Payments</p>
+          <span class="watch-label">Coming soon</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3. Personal Banking -->
+    <div class="card-scene no-video">
+      <div class="card">
+        <div class="card-face card-face--front">
+          <div class="icon-badge">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M3 10l9-6 9 6"/>
+              <path d="M5 10v9M9.5 10v9M14.5 10v9M19 10v9"/>
+              <path d="M3 19h18"/>
+            </svg>
+          </div>
+          <h3 class="card-title">Personal Banking</h3>
+          <p class="card-sub">Transfer funds, cancel late fees</p>
+          <span class="flip-hint">Click to See Video →</span>
+        </div>
+        <div class="card-face card-face--back">
+          <p class="back-title">Personal Banking</p>
+          <span class="watch-label">Coming soon</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 4. Deliveries & Returns -->
+    <div class="card-scene no-video">
+      <div class="card">
+        <div class="card-face card-face--front">
+          <div class="icon-badge">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M3 8l9-4.5L21 8v8l-9 4.5L3 16z"/>
+              <path d="M3 8l9 4.5L21 8M12 12.5V21"/>
+            </svg>
+          </div>
+          <h3 class="card-title">Deliveries &amp; Returns</h3>
+          <p class="card-sub">Tracking, returns and refunds</p>
+          <span class="flip-hint">Click to See Video →</span>
+        </div>
+        <div class="card-face card-face--back">
+          <p class="back-title">Deliveries &amp; Returns</p>
+          <span class="watch-label">Coming soon</span>
+        </div>
+      </div>
+    </div>
+</main>
+
+<footer>RingCentral proprietary and confidential, for demo purposes only.</footer>
+
+<!-- Video modal (single, reused for all cards) -->
+<div class="video-overlay" id="video-overlay">
+  <div class="video-panel">
+    <div class="video-panel-header">
+      <span id="video-panel-title">Video</span>
+      <button class="close-button" id="video-close" aria-label="Close video">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
+      </button>
+    </div>
+    <div class="video-frame-wrap">
+      <iframe id="video-frame" src="" title="Video player" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+    </div>
+  </div>
+</div>
+
+<script>
+  // --- Card flip logic ---
+  document.querySelectorAll('.card-scene').forEach(scene => {
+    scene.addEventListener('click', (e) => {
+      // Don't toggle flip when the play button itself was clicked
+      if (e.target.closest('.play-button')) return;
+      scene.classList.toggle('is-flipped');
+    });
+  });
+
+  // --- Video modal logic ---
+  const overlay = document.getElementById('video-overlay');
+  const frame = document.getElementById('video-frame');
+  const title = document.getElementById('video-panel-title');
+  const closeBtn = document.getElementById('video-close');
+
+  document.querySelectorAll('.play-button').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const scene = btn.closest('.card-scene');
+      // REPLACE the value of data-video-id on each .card-scene above with your own YouTube video ID
+      const videoId = scene.getAttribute('data-video-id');
+      // Cards without a real video (class "no-video") never open the modal
+      if (!videoId) return;
+      const cardName = scene.querySelector('.back-title').textContent;
+      title.textContent = cardName;
+      frame.src = `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0`;
+      overlay.classList.add('is-open');
+    });
+  });
+
+  function closeVideo(){
+    overlay.classList.remove('is-open');
+    frame.src = ''; // stop playback
+  }
+
+  closeBtn.addEventListener('click', closeVideo);
+  overlay.addEventListener('click', (e) => {
+    if (e.target === overlay) closeVideo();
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closeVideo();
+  });
+</script>
+
+</body>
+</html>
