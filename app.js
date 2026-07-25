@@ -61,7 +61,8 @@ const phoneTitle = document.querySelector("#phoneTitle");
 const videoTitle = document.querySelector("#videoTitle");
 const video = document.querySelector("#scenarioVideo");
 const openVideo = document.querySelector("#openVideo");
-const videoFallback = document.querySelector("#videoFallback a");
+const videoFallback = document.querySelector("#videoFallback");
+const videoFallbackLink = document.querySelector("#videoFallback a");
 const emptyVideo = document.querySelector("#emptyVideo");
 const chatFeed = document.querySelector("#chatFeed");
 
@@ -80,7 +81,15 @@ function setScenario(name) {
   openVideo.href = scenario.video || "#";
   openVideo.textContent = scenario.video ? "Open video" : "No video";
   openVideo.toggleAttribute("aria-disabled", !scenario.video);
-  videoFallback.href = scenario.video || "#";
+
+  if (videoFallback) {
+    videoFallback.hidden = Boolean(scenario.preview);
+  }
+
+  if (videoFallbackLink) {
+    videoFallbackLink.href = scenario.video || "#";
+    videoFallbackLink.textContent = scenario.video ? "Open in YouTube" : "No video";
+  }
 
   if (scenario.preview) {
     video.hidden = false;
