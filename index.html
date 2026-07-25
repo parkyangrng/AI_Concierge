@@ -124,10 +124,14 @@
                 <iframe
                   id="scenarioVideo"
                   title="Outbound Agent scenario video"
-                  src="https://www.youtube.com/embed/25lwHeO-j5E"
-                  allow="autoplay; fullscreen; encrypted-media"
+                  src="https://www.youtube-nocookie.com/embed/25lwHeO-j5E?rel=0&modestbranding=1&playsinline=1"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture; web-share"
                   allowfullscreen>
                 </iframe>
+                <div class="video-fallback" id="videoFallback" hidden>
+                  <span>Open the full video</span>
+                  <a href="https://youtu.be/25lwHeO-j5E" target="_blank" rel="noopener">Open in YouTube</a>
+                </div>
                 <div class="empty-video" id="emptyVideo" hidden>
                   <strong>No video linked yet</strong>
                   <span>Select a scenario with a video link or add one in the page script.</span>
