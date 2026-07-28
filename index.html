@@ -3,8 +3,696 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
     <title>AI Concierge Scenarios</title>
-    <link rel="stylesheet" href="styles.css">
+    <style>
+:root {
+  color-scheme: light;
+  --ink: #152026;
+  --muted: #62727d;
+  --panel: rgba(255, 255, 255, 0.88);
+  --line: rgba(27, 42, 49, 0.14);
+  --blue: #2d7ff9;
+  --teal: #1aa888;
+  --rose: #e15c72;
+  --amber: #d9902f;
+  --violet: #7867e6;
+  --bg-a: #eff8f8;
+  --bg-b: #f8f3ea;
+  --shadow: 0 24px 80px rgba(32, 48, 56, 0.18);
+  --radius: 8px;
+  font-family:
+    Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+    sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  color: var(--ink);
+  background:
+    linear-gradient(115deg, rgba(239, 248, 248, 0.96), rgba(248, 243, 234, 0.92)),
+    radial-gradient(circle at 14% 18%, rgba(45, 127, 249, 0.18), transparent 28%),
+    radial-gradient(circle at 86% 12%, rgba(26, 168, 136, 0.16), transparent 26%),
+    #f6f6f1;
+}
+
+button,
+a {
+  font: inherit;
+}
+
+.app-shell {
+  min-height: 100vh;
+  padding: clamp(18px, 3vw, 42px);
+}
+
+.stage {
+  width: min(1440px, 100%);
+  min-height: calc(100vh - clamp(36px, 6vw, 84px));
+  margin: 0 auto;
+  display: grid;
+  gap: clamp(18px, 3vw, 34px);
+  align-content: center;
+}
+
+.intro {
+  max-width: 920px;
+}
+
+.eyebrow {
+  margin: 0 0 8px;
+  color: var(--teal);
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0;
+  text-transform: uppercase;
+}
+
+h1,
+h2 {
+  margin: 0;
+  letter-spacing: 0;
+}
+
+h1 {
+  max-width: 820px;
+  font-size: clamp(2.1rem, 5.4vw, 5.6rem);
+  line-height: 0.96;
+}
+
+h2 {
+  font-size: clamp(1.25rem, 2vw, 2rem);
+}
+
+.lede {
+  max-width: 760px;
+  margin: 18px 0 0;
+  color: #445760;
+  font-size: clamp(1rem, 1.35vw, 1.22rem);
+  line-height: 1.55;
+}
+
+.experience {
+  display: grid;
+  grid-template-columns: minmax(330px, 0.86fr) minmax(430px, 1.14fr);
+  gap: clamp(18px, 2.5vw, 34px);
+  align-items: stretch;
+}
+
+.person-panel,
+.controls-panel {
+  min-width: 0;
+}
+
+.person-panel {
+  min-height: 620px;
+  position: relative;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.68), rgba(255, 255, 255, 0.3)),
+    linear-gradient(150deg, rgba(45, 127, 249, 0.12), rgba(26, 168, 136, 0.08));
+  box-shadow: var(--shadow);
+}
+
+.person-panel::before {
+  content: "";
+  position: absolute;
+  inset: auto -10% -28% -10%;
+  height: 46%;
+  background:
+    linear-gradient(90deg, rgba(21, 32, 38, 0.08) 1px, transparent 1px) 0 0 / 56px 56px,
+    linear-gradient(rgba(21, 32, 38, 0.08) 1px, transparent 1px) 0 0 / 56px 56px,
+    rgba(255, 255, 255, 0.42);
+  transform: perspective(760px) rotateX(64deg);
+  transform-origin: top;
+}
+
+.person-visual {
+  position: absolute;
+  width: min(74%, 420px);
+  aspect-ratio: 0.82;
+  left: clamp(18px, 7%, 58px);
+  bottom: 0;
+}
+
+.halo {
+  position: absolute;
+  width: 56%;
+  aspect-ratio: 1;
+  left: 18%;
+  top: 0;
+  border: 1px solid rgba(45, 127, 249, 0.22);
+  border-radius: 50%;
+  background:
+    linear-gradient(135deg, rgba(45, 127, 249, 0.18), rgba(26, 168, 136, 0.16));
+}
+
+.head {
+  position: absolute;
+  width: 25%;
+  aspect-ratio: 0.82;
+  left: 34%;
+  top: 10%;
+  border-radius: 44% 44% 48% 48%;
+  background: #c47f62;
+  box-shadow: inset -12px -10px 0 rgba(105, 56, 48, 0.12);
+}
+
+.hair {
+  position: absolute;
+  width: 29%;
+  aspect-ratio: 0.92;
+  left: 31%;
+  top: 7%;
+  border-radius: 50% 54% 44% 42%;
+  background: #26343b;
+  clip-path: polygon(0 0, 94% 0, 100% 54%, 84% 42%, 76% 72%, 58% 46%, 38% 74%, 24% 42%, 0 58%);
+}
+
+.neck {
+  position: absolute;
+  width: 12%;
+  height: 9%;
+  left: 40.8%;
+  top: 36%;
+  border-radius: 0 0 20px 20px;
+  background: #b97059;
+}
+
+.body {
+  position: absolute;
+  width: 56%;
+  height: 48%;
+  left: 20%;
+  bottom: 0;
+  border-radius: 42% 42% 0 0;
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.2), transparent 36%),
+    #2d7ff9;
+  box-shadow: inset -22px 0 0 rgba(10, 47, 88, 0.12);
+}
+
+.arm {
+  position: absolute;
+  width: 14%;
+  height: 38%;
+  top: 48%;
+  border-radius: 999px;
+  background: #ba765d;
+  transform-origin: top;
+}
+
+.arm-left {
+  left: 17%;
+  rotate: 20deg;
+}
+
+.arm-right {
+  left: 57%;
+  rotate: -34deg;
+}
+
+.hand {
+  position: absolute;
+  width: 12%;
+  aspect-ratio: 1;
+  right: 17%;
+  top: 68%;
+  border-radius: 50%;
+  background: #c47f62;
+  z-index: 4;
+}
+
+.phone {
+  position: relative;
+  z-index: 3;
+  width: min(56%, 280px);
+  min-width: 230px;
+  aspect-ratio: 0.49;
+  margin-left: auto;
+  margin-right: clamp(16px, 6%, 44px);
+  border: 10px solid #101b20;
+  border-radius: 34px;
+  background: #101b20;
+  box-shadow:
+    0 26px 60px rgba(15, 27, 31, 0.34),
+    0 0 0 1px rgba(255, 255, 255, 0.14) inset;
+}
+
+.phone-speaker {
+  position: absolute;
+  z-index: 5;
+  top: 9px;
+  left: 50%;
+  width: 34%;
+  height: 6px;
+  translate: -50% 0;
+  border-radius: 999px;
+  background: #27343a;
+}
+
+.phone-screen {
+  height: 100%;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  overflow: hidden;
+  border-radius: 24px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.95), rgba(239, 248, 248, 0.98));
+}
+
+.chat-header {
+  min-height: 74px;
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 18px 14px 12px;
+  border-bottom: 1px solid rgba(21, 32, 38, 0.1);
+  color: #223039;
+}
+
+.chat-header div {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.chat-header strong {
+  display: block;
+  overflow: hidden;
+  font-size: 0.85rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.chat-header span:last-child {
+  color: var(--teal);
+  font-size: 0.72rem;
+  font-weight: 800;
+}
+
+.status-dot {
+  width: 8px;
+  height: 8px;
+  flex: 0 0 auto;
+  border-radius: 50%;
+  background: var(--teal);
+  box-shadow: 0 0 0 4px rgba(26, 168, 136, 0.14);
+}
+
+.chat-feed {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  padding: 14px;
+  overflow: hidden;
+}
+
+.bubble {
+  width: fit-content;
+  max-width: 86%;
+  padding: 10px 11px;
+  border-radius: 16px;
+  font-size: 0.75rem;
+  line-height: 1.34;
+}
+
+.bubble.user {
+  align-self: flex-end;
+  border-bottom-right-radius: 5px;
+  color: #fff;
+  background: var(--blue);
+}
+
+.bubble.ai {
+  align-self: flex-start;
+  border-bottom-left-radius: 5px;
+  color: #26343b;
+  background: #e7eef1;
+}
+
+.composer {
+  min-height: 54px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  padding: 10px;
+  border-top: 1px solid rgba(21, 32, 38, 0.1);
+}
+
+.composer span {
+  flex: 1;
+  min-width: 0;
+  padding: 10px 12px;
+  overflow: hidden;
+  border-radius: 999px;
+  color: #74828a;
+  background: #edf3f5;
+  font-size: 0.73rem;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.composer button {
+  width: 36px;
+  height: 36px;
+  display: grid;
+  place-items: center;
+  border: 0;
+  border-radius: 50%;
+  color: #fff;
+  background: var(--teal);
+  cursor: pointer;
+}
+
+.composer svg,
+.scenario-icon svg {
+  width: 18px;
+  height: 18px;
+  fill: currentColor;
+}
+
+.controls-panel {
+  display: grid;
+  grid-template-rows: auto 1fr;
+  gap: 14px;
+}
+
+.scenario-grid {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding: 4px 4px 10px;
+  scroll-snap-type: x proximity;
+  scrollbar-width: thin;
+}
+
+.scenario-card {
+  flex: 1 0 118px;
+  min-height: 70px;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  justify-content: flex-start;
+  padding: 10px 11px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  color: var(--ink);
+  background: var(--panel);
+  box-shadow: 0 12px 34px rgba(32, 48, 56, 0.08);
+  cursor: pointer;
+  text-align: left;
+  scroll-snap-align: start;
+  transition:
+    border-color 180ms ease,
+    box-shadow 180ms ease,
+    transform 180ms ease,
+    background 180ms ease;
+}
+
+.scenario-card:hover,
+.scenario-card:focus-visible {
+  border-color: rgba(45, 127, 249, 0.45);
+  box-shadow: 0 18px 40px rgba(32, 48, 56, 0.13);
+  transform: translateY(-2px);
+  outline: none;
+}
+
+.scenario-card.active {
+  border-color: rgba(45, 127, 249, 0.62);
+  background: #fff;
+  box-shadow:
+    0 18px 44px rgba(32, 48, 56, 0.14),
+    0 0 0 3px rgba(45, 127, 249, 0.12);
+}
+
+.scenario-icon {
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  flex: 0 0 auto;
+  border-radius: 50%;
+  color: #fff;
+  background: var(--blue);
+}
+
+.scenario-card:nth-child(2) .scenario-icon {
+  background: var(--amber);
+}
+
+.scenario-card:nth-child(3) .scenario-icon {
+  background: var(--violet);
+}
+
+.scenario-card:nth-child(4) .scenario-icon {
+  background: var(--rose);
+}
+
+.scenario-card:nth-child(5) .scenario-icon {
+  background: var(--teal);
+}
+
+.scenario-card strong {
+  display: block;
+  margin-bottom: 0;
+  font-size: 0.78rem;
+  line-height: 1.12;
+}
+
+.scenario-card small {
+  display: none;
+  color: var(--muted);
+  font-size: 0.76rem;
+  line-height: 1.35;
+}
+
+.scenario-card em {
+  display: none;
+  margin-top: 9px;
+  color: #8a6470;
+  font-size: 0.68rem;
+  font-style: normal;
+  font-weight: 800;
+}
+
+.video-panel {
+  min-height: 450px;
+  display: grid;
+  grid-template-rows: auto 1fr;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: rgba(255, 255, 255, 0.9);
+  box-shadow: var(--shadow);
+}
+
+.video-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: clamp(16px, 2.2vw, 24px);
+  border-bottom: 1px solid var(--line);
+}
+
+.video-header a {
+  flex: 0 0 auto;
+  padding: 10px 13px;
+  border: 1px solid rgba(45, 127, 249, 0.28);
+  border-radius: var(--radius);
+  color: #125ec6;
+  background: rgba(45, 127, 249, 0.08);
+  font-size: 0.9rem;
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.video-header a:hover,
+.video-header a:focus-visible {
+  border-color: rgba(45, 127, 249, 0.58);
+  outline: none;
+}
+
+.video-header a[aria-disabled="true"] {
+  pointer-events: none;
+  color: #7a868c;
+  border-color: rgba(21, 32, 38, 0.14);
+  background: rgba(21, 32, 38, 0.05);
+}
+
+.video-frame {
+  position: relative;
+  min-height: 340px;
+  overflow: hidden;
+  background:
+    linear-gradient(135deg, rgba(21, 32, 38, 0.88), rgba(35, 58, 66, 0.92)),
+    #17242a;
+}
+
+.video-frame iframe,
+.empty-video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.video-frame iframe {
+  border: 0;
+  background: #17242a;
+}
+
+.local-server-notice {
+  position: absolute;
+  right: 12px;
+  bottom: 12px;
+  left: 12px;
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  border-radius: var(--radius);
+  color: rgba(255, 255, 255, 0.88);
+  background: rgba(12, 20, 24, 0.82);
+  backdrop-filter: blur(12px);
+  font-size: 0.8rem;
+}
+
+.local-server-notice[hidden] {
+  display: none;
+}
+
+.local-server-notice a {
+  flex: 0 0 auto;
+  padding: 8px 10px;
+  border-radius: 6px;
+  color: #101b20;
+  background: #fff;
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.empty-video[hidden] {
+  display: none !important;
+  pointer-events: none;
+}
+
+.empty-video {
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  align-content: center;
+  gap: 8px;
+  padding: 24px;
+  color: #eef6f7;
+  text-align: center;
+}
+
+.empty-video strong {
+  font-size: clamp(1.2rem, 2vw, 1.7rem);
+}
+
+.empty-video span {
+  max-width: 420px;
+  color: rgba(238, 246, 247, 0.72);
+  line-height: 1.5;
+}
+
+@media (max-width: 1180px) {
+  .experience {
+    grid-template-columns: 1fr;
+  }
+
+  .person-panel {
+    min-height: 560px;
+  }
+}
+
+@media (max-width: 760px) {
+  .app-shell {
+    padding: 14px;
+  }
+
+  .stage {
+    align-content: start;
+  }
+
+  h1 {
+    font-size: clamp(2.2rem, 13vw, 3.6rem);
+    line-height: 1;
+  }
+
+  .person-panel {
+    min-height: 520px;
+  }
+
+  .person-visual {
+    width: min(86%, 380px);
+    left: -10px;
+  }
+
+  .phone {
+    width: min(62%, 250px);
+    min-width: 212px;
+    margin-right: 14px;
+  }
+
+  .scenario-card {
+    flex-basis: 112px;
+    min-height: 68px;
+  }
+
+  .video-header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .video-header a {
+    width: 100%;
+    text-align: center;
+  }
+
+  .video-panel {
+    min-height: 380px;
+  }
+}
+
+@media (max-width: 420px) {
+  .person-panel {
+    min-height: 470px;
+  }
+
+  .phone {
+    width: min(68%, 232px);
+    min-width: 196px;
+    border-width: 8px;
+  }
+
+  .chat-header {
+    min-height: 66px;
+  }
+
+  .bubble {
+    font-size: 0.69rem;
+  }
+}
+    </style>
   </head>
   <body>
     <main class="app-shell">
@@ -124,13 +812,14 @@
                 <iframe
                   id="scenarioVideo"
                   title="Outbound Agent scenario video"
-                  src="https://www.youtube-nocookie.com/embed/25lwHeO-j5E?rel=0&modestbranding=1&playsinline=1"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture; web-share"
+                  src="about:blank"
+                  referrerpolicy="strict-origin-when-cross-origin"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen"
                   allowfullscreen>
                 </iframe>
-                <div class="video-fallback" id="videoFallback" hidden>
-                  <span>Open the full video</span>
-                  <a href="https://youtu.be/25lwHeO-j5E" target="_blank" rel="noopener">Open in YouTube</a>
+                <div class="local-server-notice" id="localServerNotice" hidden>
+                  <span>YouTube embedded playback needs a local web address.</span>
+                  <a id="localServerLink" href="http://127.0.0.1:8787/index.html">Open local preview</a>
                 </div>
                 <div class="empty-video" id="emptyVideo" hidden>
                   <strong>No video linked yet</strong>
@@ -143,6 +832,141 @@
       </section>
     </main>
 
-    <script src="app.js"></script>
+    <script>
+const scenarios = {
+  outbound: {
+    title: "Outbound Agent",
+    video: "https://youtu.be/25lwHeO-j5E",
+    preview: "25lwHeO-j5E",
+    chat: [
+      ["user", "Can you remind customers about their upcoming appointment?"],
+      ["ai", "Yes. I can call or message them with the appointment time and next steps."],
+      ["user", "Please handle reschedules too."],
+      ["ai", "Done. I will offer open slots and confirm the new time automatically."]
+    ]
+  },
+  health: {
+    title: "Health",
+    video: "https://youtube.com/shorts/WTDezouFwoI?feature=share",
+    preview: "WTDezouFwoI",
+    chat: [
+      ["user", "I need to book a follow-up visit."],
+      ["ai", "I can help. Would you prefer the earliest slot or your usual clinic?"],
+      ["user", "Earliest slot, please."],
+      ["ai", "I found an opening tomorrow morning and can send the intake forms now."]
+    ]
+  },
+  travel: {
+    title: "Travel",
+    video: "https://youtube.com/shorts/CXtupoB-kNg?feature=share",
+    preview: "CXtupoB-kNg",
+    chat: [
+      ["user", "My flight was delayed. Can I still make the hotel check-in?"],
+      ["ai", "Yes. I updated the hotel with your arrival time and found a later shuttle."],
+      ["user", "Can you add the shuttle details to my itinerary?"],
+      ["ai", "Done. I also flagged your connection so you get alerts as it changes."]
+    ]
+  },
+  account: {
+    title: "Account Management",
+    video: "https://youtube.com/shorts/-mqj4PKYJo8?feature=share",
+    preview: "-mqj4PKYJo8",
+    chat: [
+      ["user", "Can you brief me before the renewal call?"],
+      ["ai", "The account expanded usage by 32%, but two support issues remain open."],
+      ["user", "What should I prioritize?"],
+      ["ai", "Start with the open issues, then offer the team analytics add-on."]
+    ]
+  },
+  home: {
+    title: "Home Service",
+    video: "https://youtube.com/shorts/ayM1ihCiXR8?feature=share",
+    preview: "ayM1ihCiXR8",
+    chat: [
+      ["user", "Can someone come by to fix my service issue?"],
+      ["ai", "I found a technician window tomorrow between 10:00 AM and noon."],
+      ["user", "Can you text me when they are nearby?"],
+      ["ai", "Yes. I will send arrival updates and follow up after the visit."]
+    ]
+  }
+};
+
+const cards = document.querySelectorAll(".scenario-card");
+const phoneTitle = document.querySelector("#phoneTitle");
+const videoTitle = document.querySelector("#videoTitle");
+const video = document.querySelector("#scenarioVideo");
+const openVideo = document.querySelector("#openVideo");
+const emptyVideo = document.querySelector("#emptyVideo");
+const chatFeed = document.querySelector("#chatFeed");
+const localServerNotice = document.querySelector("#localServerNotice");
+const localServerLink = document.querySelector("#localServerLink");
+const localPreviewUrl = "http://127.0.0.1:8787/index.html";
+
+function buildYoutubeEmbed(videoId) {
+  const params = new URLSearchParams({
+    rel: "0",
+    playsinline: "1"
+  });
+
+  if (location.protocol === "http:" || location.protocol === "https:") {
+    params.set("origin", location.origin);
+    params.set("widget_referrer", location.href);
+  }
+
+  return `https://www.youtube.com/embed/${videoId}?${params.toString()}`;
+}
+
+if (location.protocol === "file:" && localServerNotice) {
+  localServerNotice.hidden = false;
+  localServerLink.href = localPreviewUrl;
+}
+
+function setScenario(name) {
+  const scenario = scenarios[name];
+  if (!scenario) return;
+
+  cards.forEach((card) => {
+    card.classList.toggle("active", card.dataset.scenario === name);
+    card.setAttribute("aria-selected", String(card.dataset.scenario === name));
+  });
+
+  phoneTitle.textContent = scenario.title;
+  videoTitle.textContent = scenario.title;
+  video.title = `${scenario.title} scenario video`;
+  openVideo.href = scenario.video || "#";
+  openVideo.textContent = scenario.video ? "Open video" : "No video";
+  openVideo.toggleAttribute("aria-disabled", !scenario.video);
+
+  if (scenario.preview) {
+    const previewUrl = buildYoutubeEmbed(scenario.preview);
+    video.hidden = false;
+    emptyVideo.hidden = true;
+    emptyVideo.style.display = "none";
+    if (video.src !== previewUrl) {
+      video.src = previewUrl;
+    }
+  } else {
+    video.hidden = true;
+    emptyVideo.hidden = false;
+    emptyVideo.style.display = "grid";
+    video.removeAttribute("src");
+  }
+
+  chatFeed.replaceChildren(
+    ...scenario.chat.map(([sender, text]) => {
+      const bubble = document.createElement("div");
+      bubble.className = `bubble ${sender}`;
+      bubble.textContent = text;
+      return bubble;
+    })
+  );
+}
+
+cards.forEach((card) => {
+  card.addEventListener("click", () => setScenario(card.dataset.scenario));
+});
+
+setScenario("outbound");
+    </script>
   </body>
 </html>
